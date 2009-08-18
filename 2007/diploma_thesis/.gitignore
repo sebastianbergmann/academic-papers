@@ -1,0 +1,8 @@
+*.log
+*.pdf
+*.toc
+*.out
+*.bak
+*.aux
+*.lof
+doxygen
