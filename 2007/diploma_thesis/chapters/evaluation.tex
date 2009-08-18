@@ -1,0 +1,229 @@
+\chapter{Evaluation and Related Work}
+\label{chapter-Evaluation}
+
+This chapter evaluates the workflow model (see
+Chapter~\ref{chapter-WorkflowModel}) and the software (see
+Chapter~\ref{chapter-DesignAndImplementation}) that have been developed as
+part of this with regard to the requirements (see
+Chapter~\ref{chapter-Requirements}) and compares it related work.
+
+\section{Evaluation}
+
+\subsection{Workflow Model}
+
+The workflow model (see Chapter~\ref{chapter-WorkflowModel}) that is the basis
+of the software that has been developed as part of this thesis meets the
+requirements set up by eZ~Systems~AS (see
+Section~\ref{section-RequirementseZPublishTelemark}). It provides good support
+for expressing control flow with its direct support of the basic control flow
+patterns (see Section~\ref{subsection-BasicControlFlowPatterns}) and the
+workflow patterns for advanced branching and synchronization (see
+Section~\ref{subsection-AdvancedBranchingAndSynchronization}). This allows the
+expression of operations such as the publishing, removal, and modification of
+content objects in eZ~Publish to be expressed through workflows. The support
+of sub-workflows allows the decomposition of these workflows into manageable
+and reusable parts.
+
+Table~\ref{table-ComparisonWorkflowSystems} compares the expressiveness of
+the \texttt{ezcWorkflow} components's \emph{backend language} with regard to
+the directly supported workflow patterns to other workflow systems. The
+comparison data is partially taken from \cite{BK03}.
+
+\begin{table}[hbtp]
+\begin{center}
+\begin{tabular}[t]{|p{100pt}|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+\small{\textbf{Workflow Pattern}} &
+\begin{sideways}\small{\textbf{ezcWorkflow}}\end{sideways} &
+\begin{sideways}\small{\textbf{YAWL}}\end{sideways} &
+\begin{sideways}\small{\textbf{eZ Publish 3}}\end{sideways} &
+\begin{sideways}\small{\textbf{Galaxia}}\end{sideways} &
+\begin{sideways}\small{\textbf{Radicore}}\end{sideways} &
+\begin{sideways}\small{\textbf{Visual WorkFlo}}\end{sideways} &
+\begin{sideways}\small{\textbf{Verve Workflow}}\end{sideways} &
+\begin{sideways}\small{\textbf{Staffware}}\end{sideways} &
+\begin{sideways}\small{\textbf{MQSeries Workflow}}\end{sideways} &
+\begin{sideways}\small{\textbf{Forté Conductor}}\end{sideways} &
+\begin{sideways}\small{\textbf{HP ChangeEngine}}\end{sideways} &
+\begin{sideways}\small{\textbf{Fujitsu i-Flow}}\end{sideways} &
+\begin{sideways}\small{\textbf{SAP R/3 Workflow}}\end{sideways} \\
+\hline
+\small{Sequence} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} \\
+\hline
+\small{Parallel Split} & \small{$\surd$} & \small{$\surd$} & (\small{$\surd$}) & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} \\
+\hline
+\small{Synchronization} & \small{$\surd$} & \small{$\surd$} & & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} \\
+\hline
+\small{Exclusive Choice} & \small{$\surd$} & \small{$\surd$} & & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & (\small{$\surd$}) & \small{$\surd$} & (\small{$\surd$}) & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} \\
+\hline
+\small{Simple Merge} & \small{$\surd$} & \small{$\surd$} & & (\small{$\surd$}) & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} \\
+\hline
+\small{Multi-Choice} & \small{$\surd$} & \small{$\surd$} & & & & (\small{$\surd$}) & \small{$\surd$} & (\small{$\surd$}) & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & (\small{$\surd$}) & (\small{$\surd$}) \\
+\hline
+\small{Synchronizing Merge} & \small{$\surd$} & \small{$\surd$} & & & \small{$\surd$} & & & \small{$\surd$} & & & & & \\
+\hline
+\small{Multi-Merge} & & \small{$\surd$} & & & & & \small{$\surd$} & & & \small{$\surd$} & & & \\
+\hline
+\small{Discriminator} & \small{$\surd$} & \small{$\surd$} & & & & & \small{$\surd$} & & & (\small{$\surd$}) & \small{$\surd$} & & \small{$\surd$} \\
+\hline
+\small{Arbitrary Cycles} & \small{$\surd$} & \small{$\surd$} & & & \small{$\surd$} & & \small{$\surd$} & \small{$\surd$} & & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \\
+\hline
+\small{Implicit Termination} & \small{$\surd$} & & & & & & & \small{$\surd$} & \small{$\surd$} & & & & \\
+\hline
+\small{Multiple Instances without Synchronization} & & \small{$\surd$} & & & & \small{$\surd$} & \small{$\surd$} & & & \small{$\surd$} & & \small{$\surd$} & \\
+\hline
+\small{Multiple Instances with A Priori Design Time Knowledge} & & \small{$\surd$} & & & & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} & \small{$\surd$} \\
+\hline
+\small{Multiple Instances with A Priori Runtime Knowledge} & & \small{$\surd$} & & & & & & & & & & & (\small{$\surd$}) \\
+\hline
+\small{Multiple Instances without A Priori Runtime Knowledge} & & \small{$\surd$} & & & & & & & & & & & \\
+\hline
+\small{Deferred Choice} & & \small{$\surd$} & & & & & & (\small{$\surd$}) & & & & & \\
+\hline
+\small{Interleaved Parallel Routing} & & \small{$\surd$} & & & & & & & & & & & \\
+\hline
+\small{Milestone} & & \small{$\surd$} & & & & & & & & & & & \\
+\hline
+\small{Cancel Activity} & & \small{$\surd$} & & & & & & \small{$\surd$} & & & & & \small{$\surd$} \\
+\hline
+\small{Cancel Case} & \small{$\surd$} & \small{$\surd$} & & & & \small{$\surd$} & \small{$\surd$} & & & \small{$\surd$} & \small{$\surd$} & & \small{$\surd$} \\
+\hline
+\end{tabular}
+\caption{Comparison of Workflow Systems}
+\label{table-ComparisonWorkflowSystems}
+\end{center}
+\end{table}
+
+\subsection{Implementation}
+
+The software that has been developed as part of this thesis meets the
+requirements set up by eZ~Systems~AS (see
+Section~\ref{section-RequirementseZPublishTelemark}). It has been
+implemented using version~5 of the PHP programming language and is
+customizable and extendable. Its architecture allows the addition and
+customization of components for workflow execution, persistence, history,
+monitoring, and worklist management, for instance. The backend language
+that is understood by its virtual machine can be extended by implementing
+new node classes. The data storage for workflow schemas and the persistence
+of workflow instances has been abstracted, reference implementations for
+relational databases (workflow schemas and persistence) and XML files
+(workflow schemas only) are available. The workflow schemas are stored in
+such a way that they are versioned, old and new versions of a workflow can
+be executed at the same time. The \emph{Workflow Execution API} provides
+access to information on the workflow instances that are currently
+executing and it is possible to manually control the workflow instances
+that are currently executing. Through PHP's native SOAP support, the
+\emph{Workflow Execution API} can be exposed as a web service, thus
+faciliating a distributed and federated workflow environment where one
+workflow on one server can start another workflow on another server, for
+instance. A special purpose implementation of the workflow virtual machine,
+\texttt{ezcWorkflowTestExecution}, allows for the simulation of workflow
+execution for debugging and testing.
+
+\section{Related Work}
+
+\subsection{Research}
+
+\subsubsection{Micro-Workflow}
+
+Manolescu proposes \emph{a new workflow architecture that bridges the gap
+between the type of functionality provided by current workflow systems and
+the type of workflow functionality required in object-oriented applications}.
+In his PhD thesis \cite{DAM01}, he discusses the design and implementation of
+Micro-Workflow, an object-oriented framework that is built using this
+architecture. One of Manolescu's key findings is that more advanced workflow
+features can be added to light-weight workflow core through composition.
+
+\subsubsection{SWAMP}
+
+In his Diploma thesis \cite{TS04}, Schmidt discusses the design and
+implementation of the SWAMP workflow system (SuSE Workflow and Management
+Platform). The goal of Schmidt's thesis is to replace an inhomogeneous
+legacy system with a unified workflow system that is easier to maintain and
+that can be easily customized and extended. The motivations behind and the
+requirements for the SWAMP workflow system have some similarities with the
+needs for the software that has been developed as part of this thesis.
+
+\subsubsection{YAWL}
+
+In her Master thesis \cite{SH05}, Heijens discusses the design and
+implementation of YAWL. YAWL is both a workflow language (Yet Another Workflow
+Language) and a workflow system. The workflow model of YAWL is formally based
+on Petri nets and supports all the workflow patterns with the exception of
+\emph{Implicit Termination}.
+
+\subsection{Workflow Systems for PHP}
+
+\subsubsection{eZ Publish 3}
+
+From the workflow patterns that were discussed in
+Section~\ref{section-WorkflowPatterns}, the workflow system of eZ~Publish~3
+only supports the \emph{Sequence} workflow pattern directly. Through its
+\emph{Multiplexer} workflow event, which starts another workflow from within
+a workflow, it indirectly supports the \emph{Parallel Split} workflow pattern.
+
+The technical limitations of the workflow system in eZ~Publish~3 (see
+Section~\ref{section-RequirementseZPublish3}) are representative for other
+content management systems for the PHP platform (and most likely for those for
+other platforms as well). The tight integration with the application into
+which the workflow system is embedded makes the independent usage of the
+workflow system impossible.
+
+\subsubsection{Galaxia Workflow Engine}
+
+The Galaxia Workflow Engine \cite{GF03} is an activity-based workflow engine
+for PHP that is loosely based on OpenFlow \cite{OPENFLOW}.
+
+The graphical workflow description language supported by the Galaxia workflow
+engine consists of six \emph{activity types}:
+
+\begin{enumerate}
+\item \emph{Start} represents the beginning of a workflow.
+\item \emph{End} represents the end of a workflow.
+\item \emph{Activity} represents an activity that is to be performed.
+\item \emph{Switch} represents a point of decision in the workflow and can be
+      compared to the \emph{Exclusive Choice} workflow pattern.
+\item \emph{Split} is equivalent to the \emph{Parallel Split} workflow
+      pattern.
+\item \emph{Join} is equivalent to the \emph{Synchronization} workflow
+      pattern.
+\end{enumerate}
+
+Galaxia does not have an explicit \emph{Simple Merge} construct to merge
+the multiple possible threads of a \emph{Switch} construct. Instead, an
+\emph{Activity} construct implicitly merges its incoming threads.
+
+\subsubsection{Radicore}
+
+The Radicore toolkit for PHP features an activity-based workflow engine that
+is based on Petri nets \cite{TM04}.
+
+It supports
+
+\begin{itemize}
+\item Sequential Routing.
+\item Parallel Routing through \emph{AND-Split} and \emph{AND-Join} constructs.
+\item Conditional Routing through explicit and implicit \emph{OR-Split} and
+      \emph{OR-Join} constructs.
+\item Iterative Routing using the \emph{OR-Split} construct.
+\end{itemize}
+
+These constructs correspond to the \emph{Sequence}, \emph{Parallel Split},
+\emph{Synchronization}, \emph{Exclusive Choice}, and \emph{Simple Merge}
+workflow patterns (see Section~\ref{section-WorkflowPatterns}).
+
+\section{Summary}
+
+Workflow systems such as Micro-Workflow \cite{DAM01} and YAWL \cite{SH05}, for
+instance, that have been implemented as part of academic research often excel
+only in the aspect that is specific to the research while neglecting other
+aspects that are relevant to a workflow system. One of the goals of this
+thesis was to combine aspects such as component-based workflow architecture,
+workflow virtual machine, and workflow patterns to create a workflow system
+that meets industry requirements.
+
+The existing workflow systems for PHP do not lend themselves well to
+customization and extension with regard to the requirements set up by
+eZ~Systems~AS. This fact, together with eZ~Systems' requirement for clear
+intellectual property, lead to the development of a new workflow engine
+instead of starting with an existing one.

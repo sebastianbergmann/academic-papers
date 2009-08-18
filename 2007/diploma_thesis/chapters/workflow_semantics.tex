@@ -1,0 +1,446 @@
+\chapter{Workflow Semantics}
+\label{chapter-WorkflowSemantics}
+
+This chapter presents \emph{Petri nets} as a formal way and
+\emph{workflow patterns} as a more pragmatic way to define the semantics of a
+workflow model.
+
+\section{Petri Nets}
+
+A Petri net is a mathematical representation for discrete distributed systems.
+It is a 5-tuple $(S, T, F, M_0, W$), where \cite{JD01}
+
+\begin{itemize}
+\item $S$ is a set of \emph{places}.
+\item $T$ is a set of \emph{transitions}.
+\item $F$ is a set of \emph{arcs} known as a \emph{flow relation}. The set
+      $F$ is subject to the constraint that no arc may connect two places
+      or two transitions, or more formally:
+      $F \subseteq (S \times T) \bigcup (T \times S)$.
+\item $M_0 : S \rightarrow \mathbb{N}$ is an \emph{initial marking}, where
+      for each place $s \in S$, there are $n_s \in \mathbb{N}$ tokens.
+\item $W : F \rightarrow \mathbb{N}$ is a set of \emph{arc weights}, which
+      assigns to each arc $f \in F$ some $n \in \mathbb{N}^+$ denoting how
+      many tokens are consumed from a place by a transition, or alternatively,
+      how many tokens are produced by a transition and put into each place.
+\end{itemize}
+
+A place that has an arc to a transition is called an \emph{input place}, a
+place that has an arc from a transition is called an \emph{output place}. A
+place may contain any number of tokens. A distribution of tokens over the
+places of a net is called a \emph{marking}. When a transition is activated
+(or \emph{fired}), it consumes the tokens from its input places, performs
+some form of processing, and places a specified number of tokens in its
+output places. These three steps are performed atomically. The activation
+of transitions is non-deterministic. This makes Petri nets well suited for
+the modelling of concurrent behaviour in distributed systems.
+
+Petri nets have been proposed for modelling workflows by van der Aalst
+\cite{WA96}, for instance, because they provide \emph{formal semantics
+despite the graphical nature} and an \emph{abundance of analysis
+techniques} exists. Figures \ref{figure-Causality} to \ref{figure-ORJoin}
+show how the workflow primitives of the workflow reference model
+\cite{WfMC95} can be expressed using Petri nets.
+
+\begin{figure}[htb]
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at (0,0) [place,tokens=1] (a) {};
+        \node at (1,0) [transition]     (b) {$t_{11}$};
+        \node at (2,0) [place]          (c) {};
+        \node at (3,0) [transition]     (d) {$t_{12}$};
+        \node at (4,0) [place]          (e) {};
+
+        \draw [->] (a) -- (b);
+        \draw [->] (b) -- (c);
+        \draw [->] (c) -- (d);
+        \draw [->] (d) -- (e);
+      \end{tikzpicture}
+      \caption[The \emph{Causality} workflow primitive]{Causality}
+      \label{figure-Causality}
+    \end{center}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at (0,0) [place,tokens=1] (a) {};
+        \node at (2,0) [transition]     (b) {$t_{21}$};
+        \node at (4,0) [place]          (c) {};
+        \node at (2,2) [transition]     (d) {$t_{22}$};
+
+        \draw [->] (a) -- (b);
+        \draw [->] (b) -- (c);
+        \draw [->] (c) -- (d);
+        \draw [->] (d) -- (a);
+      \end{tikzpicture}
+      \caption[The \emph{Iteration} workflow primitive]{Iteration}
+      \label{figure-Iteration}
+    \end{center}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[htb]
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at (0,1) [place,tokens=1] (a) {};
+        \node at (2,1) [transition]     (b) {$t_{3}$};
+        \node at (4,2) [place]          (c) {};
+        \node at (4,0) [place]          (d) {};
+
+        \draw [->] (a) -- (b);
+        \draw [->] (b) -- (c);
+        \draw [->] (b) -- (d);
+      \end{tikzpicture}
+      \caption[The \emph{AND-Split} workflow primitive]{AND-Split}
+      \label{figure-ANDSplit}
+    \end{center}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at (0,2) [place,tokens=1] (a) {};
+        \node at (0,0) [place,tokens=1] (b) {};
+        \node at (2,1) [transition]     (c) {$t_{4}$};
+        \node at (4,1) [place]          (d) {};
+
+        \draw [->] (a) -- (c);
+        \draw [->] (b) -- (c);
+        \draw [->] (c) -- (d);
+      \end{tikzpicture}
+      \caption[The \emph{AND-Join} workflow primitive]{AND-Join}
+      \label{figure-ANDJoin}
+    \end{center}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[htb]
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at (0,1) [place,tokens=1] (a) {};
+        \node at (2,2) [transition]     (b) {$t_{51}$};
+        \node at (2,0) [transition]     (c) {$t_{52}$};
+        \node at (4,2) [place]          (d) {};
+        \node at (4,0) [place]          (e) {};
+
+        \draw [->] (a) -- (b);
+        \draw [->] (a) -- (c);
+        \draw [->] (b) -- (d);
+        \draw [->] (c) -- (e);
+      \end{tikzpicture}
+      \caption[The \emph{OR-Split} workflow primitive]{OR-Split}
+      \label{figure-ORSplit}
+    \end{center}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at (0,2) [place,tokens=1] (a) {};
+        \node at (0,0) [place]          (b) {};
+        \node at (2,2) [transition]     (c) {$t_{61}$};
+        \node at (2,0) [transition]     (d) {$t_{62}$};
+        \node at (4,1) [place]          (e) {};
+
+        \draw [->] (a) -- (c);
+        \draw [->] (b) -- (d);
+        \draw [->] (c) -- (e);
+        \draw [->] (d) -- (e);
+      \end{tikzpicture}
+      \caption[The \emph{OR-Join} workflow primitive]{OR-Join}
+      \label{figure-ORJoin}
+    \end{center}
+  \end{minipage}
+\end{figure}
+
+Finite Automata are another formalism that can be used to describe workflows \cite{ARK03}.
+
+\section{Workflow Patterns}
+\label{section-WorkflowPatterns}
+
+In Chapter 3 of his PhD thesis \cite{BK03}, Kiepuszewski lists
+\emph{requirements for workflow languages through workflow patterns}.
+
+Much like the software design patterns \cite{GoF94}, these workflow patterns
+describe recurring solutions to common problems. They are relevant to both the
+implementor and the user of a workflow management system. The former uses the
+workflow patterns as a common vocabulary for workflow description language
+constructs and to define the semantics of a workflow model (see
+Chapter~\ref{chapter-WorkflowModel}) whereas the latter uses them as a guide while
+formulating his workflow in the workflow system's description language. The
+workflow patterns also faciliate the comparison with other workflow systems
+with regard to expressiveness and power.
+ 
+In Chapter 4 of his PhD thesis \cite{BK03}, Kiepuszewski maps the workflow
+patterns that he identified to Petri nets to provide a formal foundation for
+this more pragmatic approach to defining workflow semantics.
+
+In this section we discuss the subset of the workflow patterns identified by
+Kiepuszewski that is directly supported by the software that has been
+implemented as part of this thesis.
+
+\subsection{Basic Control Flow Patterns}
+\label{subsection-BasicControlFlowPatterns}
+
+The workflow patterns for basic control flow \emph{capture elementary aspects
+of process control} and \emph{closely match the definitions of elementary
+control flow concepts provided by the Workflow Management Coalition in
+\cite{WfMC95,WfMC99}}.
+
+\subsubsection{Sequence}
+
+The \emph{Sequence} workflow pattern represents linear execution of workflow
+steps: one action of a workflow is activated unconditionally (for example
+\emph{B} in Figure \ref{figure-Sequence}) after another (for example \emph{A}
+in Figure \ref{figure-Sequence}) finished executing.
+
+\begin{figure}[hbt]
+\begin{center}
+\begin{tikzpicture}
+  \node at ( 0, 0) [node] (A) {A};
+  \node at ( 2, 0) [node] (B) {B};
+  \draw [->] (A) to (B);
+\end{tikzpicture}
+\end{center}
+\caption[The \emph{Sequence} workflow pattern]{Sequence}
+\label{figure-Sequence}
+\end{figure}
+
+\textbf{Use Case Example:} After an order is placed, the credit card specified by the
+customer is charged. 
+
+\subsubsection{Parallel Split (AND-Split)}
+
+The \emph{Parallel Split} workflow pattern divides one thread of execution
+(for example the one that activates \emph{A} in Figure
+\ref{figure-ParallelSplit}) unconditionally into multiple parallel threads of
+execution (for example the ones that start in \emph{B}, \emph{C}, and \emph{D}
+in Figure \ref{figure-ParallelSplit}).
+
+\begin{figure}[htb]
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at ( 0, 0) [node] (A) {A};
+        \node at ( 2, 2) [node] (B) {B};
+        \node at ( 2, 0) [node] (C) {C};
+        \node at ( 2,-2) [node] (D) {D};
+        \draw [->,bend left=45] (A) to (B);
+        \draw [->] (A) to (C);
+        \draw [->,bend right=45] (A) to (D);
+      \end{tikzpicture}
+      \caption[The \emph{Parallel Split} workflow pattern]{Parallel Split}
+      \label{figure-ParallelSplit}
+    \end{center}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at ( 0, 2) [node] (B) {B};
+        \node at ( 0, 0) [node] (C) {C};
+        \node at ( 0,-2) [node] (D) {D};
+        \node at ( 2, 0) [node] (E) {E};
+        \draw [->,bend left=45] (B) to (E);
+        \draw [->] (C) to (E);
+        \draw [->,bend right=45] (D) to (E);
+      \end{tikzpicture}
+      \caption[The \emph{Synchronization} workflow pattern]{Synchronization}
+      \label{figure-Synchronization}
+    \end{center}
+  \end{minipage}
+\end{figure}
+
+\textbf{Use Case Example:} After the credit card specified by the customer has been
+successfully charged, the activities of sending a confirmation email and
+starting the shipping process can be executed in parallel.
+
+\subsubsection{Synchronization (AND-Join)}
+
+The \emph{Synchronization} workflow pattern synchronizes multiple parallel
+threads of execution (for example the ones that end in \emph{B}, \emph{C},
+and \emph{D} in Figure \ref{figure-Synchronization}) into a single thread of
+execution (for example the one that starts in \emph{E} in Figure
+\ref{figure-Synchronization}).
+
+Workflow execution continues once all threads of execution that are to be
+synchronized have finished executing (exactly once).
+
+\textbf{Use Case Example:} After the confirmation email has been sent and
+the shipping process has been completed, the order can be archived.
+
+The workflow patterns that have been discussed so far handle the
+\emph{unconditional routing} of control flow. We will now take a look at the
+workflow patterns for \emph{conditional routing}.
+
+\subsubsection{Exclusive Choice (XOR-Split)}
+
+The \emph{Exclusive Choice} workflow pattern defines multiple possible paths
+(for example the ones that start in \emph{B}, \emph{C}, and \emph{D} in Figure
+\ref{figure-ExclusiveChoice}) for the workflow of which exactly one is chosen
+(for example the one that starts in \emph{C} in Figure
+\ref{figure-ExclusiveChoice}).
+
+\begin{figure}[htb]
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at ( 0, 0) [node] (A) {A};
+        \node at ( 2, 2) [node] (B) {B};
+        \node at ( 2, 0) [node] (C) {C};
+        \node at ( 2,-2) [node] (D) {D};
+        \draw[dashed] [->,bend left=45] (A) to (B);
+        \draw [->] (A) to (C);
+        \draw[dashed] [->,bend right=45] (A) to (D);
+      \end{tikzpicture}
+      \caption[The \emph{Exclusive Choice} workflow pattern]{Exclusive Choice}
+      \label{figure-ExclusiveChoice}
+    \end{center}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at ( 0, 2) [node] (B) {B};
+        \node at ( 0, 0) [node] (C) {C};
+        \node at ( 0,-2) [node] (D) {D};
+        \node at ( 2, 0) [node] (E) {E};
+        \draw[dashed] [->,bend left=45] (B) to (E);
+        \draw [->] (C) to (E);
+        \draw[dashed] [->,bend right=45] (D) to (E);
+      \end{tikzpicture}
+      \caption[The \emph{Simple Merge} workflow pattern]{Simple Merge}
+      \label{figure-SimpleMerge}
+    \end{center}
+  \end{minipage}
+\end{figure}
+
+\textbf{Use Case Example:} After an order has been received, the payment can
+be performed by credit card or bank transfer.
+
+\subsubsection{Simple Merge (XOR-Join)}
+
+The \emph{Simple Merge} workflow pattern is to be used to merge the possible
+paths that are defined by a preceding \emph{Exclusive Choice}. It is assumed
+that of these possible paths exactly one is taken (for example \emph{C} in
+Figure \ref{figure-SimpleMerge}) and no synchronization takes place.
+
+\textbf{Use Case Example:} After the payment has been performed by either
+credit card or bank transfer, the order can be processed further.
+
+\subsection{Advanced Branching and Synchronization}
+\label{subsection-AdvancedBranchingAndSynchronization}
+
+The workflow patterns for advanced branching and synchronization \emph{do
+not have straightforward support in most [of the] workflow engines [that
+Kiepuszewski evaluated]} (see Table~\ref{table-ComparisonWorkflowSystems}).
+\emph{Nevertheless, they are quite common in real-life business scenarios}.
+
+\subsubsection{Multi-Choice (OR-Split)}
+
+The \emph{Multi-Choice} workflow pattern defines multiple possible paths
+(for example the ones that start in \emph{B}, \emph{C}, and \emph{D} in Figure
+\ref{figure-MultiChoice}) for the workflow of which one or more are chosen
+(for example the ones that start in \emph{B} and \emph{D} in Figure
+\ref{figure-MultiChoice}). It is a generalization of the Parallel Split and
+Exclusive Choice workflow patterns.
+
+\begin{figure}[htb]
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at ( 0, 0) [node] (A) {A};
+        \node at ( 2, 2) [node] (B) {B};
+        \node at ( 2, 0) [node] (C) {C};
+        \node at ( 2,-2) [node] (D) {D};
+        \draw [->,bend left=45] (A) to (B);
+        \draw[dashed] [->] (A) to (C);
+        \draw [->,bend right=45] (A) to (D);
+      \end{tikzpicture}
+      \caption[The \emph{Multi-Choice} workflow pattern]{Multi-Choice}
+      \label{figure-MultiChoice}
+    \end{center}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \begin{center}
+      \begin{tikzpicture}
+        \node at ( 0, 2) [node] (B) {B};
+        \node at ( 0, 0) [node] (C) {C};
+        \node at ( 0,-2) [node] (D) {D};
+        \node at ( 2, 0) [node] (E) {E};
+        \draw [->,bend left=45] (B) to (E);
+        \draw[dashed] [->] (C) to (E);
+        \draw [->,bend right=45] (D) to (E);
+      \end{tikzpicture}
+      \caption[The \emph{Synchronizing Merge} workflow pattern]{Synchronizing Merge}
+      \label{figure-SynchronizingMerge}
+    \end{center}
+  \end{minipage}
+\end{figure}
+
+\subsubsection{Synchronizing Merge}
+
+The \emph{Synchronizing Merge} workflow pattern is to be used to synchronize
+multiple parallel threads of execution that are activated by a preceding
+\emph{Multi-Choice} (for example the ones that end in \emph{B} and \emph{D}
+in Figure \ref{figure-SynchronizingMerge}).
+
+\subsubsection{Discriminator}
+
+The \emph{Discriminator} workflow pattern can be applied when the assumption
+we made for the \emph{Simple Merge} workflow pattern does not hold. It can
+deal with merge situations where multiple incoming branches may run in
+parallel.
+
+It activates its outgoing node after being activated by the first incoming
+branch and then waits for all remaining branches to complete before it resets
+itself. After the reset the \emph{Discriminator} can be triggered again.
+
+\textbf{Use Case Example:} To improve response time, an action is delegated to
+several distributed servers. The first response proceeds the flow, the other
+responses are ignored.
+
+\subsection{Structural Patterns}
+\label{subsection-StructuralPatterns}
+
+The structural workflow patterns deal with restrictions that different workflow
+models can impose.
+
+\subsubsection{Arbitrary Cycles}
+
+A common restriction workflow models impose is that arbitrary cycles, ie. one
+or more activities are done repeatedly, are not supported. As an alternative,
+special loop constructs that mark the start and end point of a structured cycle
+are offered.
+
+\subsubsection{Implicit Termination}
+
+The execution of the workflow is (successfully) terminated when there are no
+activated activities left and no other activity can be activated. This implicit
+termination of workflow execution can be used in addition to explicit end
+activities.
+
+\subsection{Cancellation Patterns}
+\label{subsection-CancellationPatterns}
+
+\subsubsection{Cancel Case}
+
+The execution of a workflow instance is cancelled.
+
+\textbf{Use Case Example:} An order is cancelled.
+
+\section{Summary}
+
+This chapter presented Petri nets as a general, well understood and well
+researched, theory for concurrency and the workflow patterns as an pragmatic
+approach to describe the semantics of workflow routing constructs.
+
+We will use the workflow patterns in Chapter~\ref{chapter-Requirements} during
+the requirements analysis and in Chapter~\ref{chapter-WorkflowModel} to define
+the semantics of the workflow model for the software that has been developed as
+part of this thesis.

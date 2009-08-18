@@ -1,0 +1,153 @@
+\chapter{Problem Domain}
+\label{chapter-ProblemDomain}
+
+This chapter gives an introduction to the problem domain of Enterprise Content
+Management and Workflow Management.
+
+\section{Enterprise Content Management}
+
+The meaning of the term ''Enterprise Content Management'' can be approached
+gradually by looking at the three words that make it up:
+
+\begin{itemize}
+\item \textbf{Enterprise} refers to the employees of an enterprise with access
+      and editing rights.
+\item \textbf{Content} refers to arbitrary content stored in the electronic
+      systems of an enterprise.
+\item \textbf{Management} refers to a software system for the administration,
+      control, and processing of content in an enterprise, both internally
+      (in an intranet, for example) and externally (on the internet, for
+      example).
+\end{itemize}
+
+The Association for Information and Image Management (AIIM) defines
+Enterprise Content Management (ECM) as
+
+\begin{quote}
+\emph{the technologies used to capture, manage, store, preserve, and deliver
+content and documents related to organizational processes. ECM tools and
+strategies allow the management of an organization's unstructured information,
+wherever that information exists} \cite{AIIM}.
+\end{quote}
+
+The usage scenarios of eZ~Publish (see Section~\ref{section-eZPublish}), for
+example, range from blogs and personal websites to community portals, company
+websites, webshops, business process management, enterprise resource planning,
+and document management in both governmental institutions and corporate
+environments.
+
+\section{Workflow Management}
+
+The Workflow Management Coalition (WfMC) describes workflow management as
+
+\begin{quote}
+\emph{the automation of a business process, in whole or parts, where
+documents, information or tasks are passed from one participant to another to
+be processed, according to a set of procedural rules} \cite{RA01}.
+\end{quote}
+
+Georgakopoulos et. al. define workflow management as a
+
+\begin{quote}
+\emph{technology supporting the reengineering of business and information
+processes. It involves: (1) defining \emph{workflows}, i.e., describing
+those aspects of a process that are relevant to controlling and
+coordinating the execution of its tasks [...], and (2) providing for fast
+(re)design and (re)implementation of the processes as business needs and
+information systems change} \cite{DG95}.
+\end{quote}
+
+Workflow management systems are software systems that enable workflow
+management.
+
+There are two kinds of workflow management systems: those that are
+\emph{activity-based} and those that are \emph{entity-based}. The former have
+their focus on the activities that are to be completed throughout the workflow,
+the latter focus on entities, such as documents, that are processed by a
+workflow \cite{FG02}.
+
+The documentation of the OpenFlow workflow management system \cite{OPENFLOW}
+summarizes the purpose of an activity-based workflow management system as
+\emph{answering the question ''who must do what, when and how''}:
+
+\begin{itemize}
+\item The workflow definition (or \emph{workflow schema}) defines the sequence
+      of activities that are to be carried out. It specifies \emph{what}
+      should be done and \emph{when} by the definition of activities
+      (represented by the \emph{nodes} of a directed graph) and transitions
+      (represented by the \emph{edges} of a directed graph).
+
+\item An activity (the \emph{what} part of the issue) represents
+      something to be done: reviewing a document, publishing a document,
+      placing an order, sending an e-mail, and so on.
+
+\item Transitions define the appropriate sequence of activities for a
+      process (the \emph{when} part of the issue).
+
+\item Each activity will have an associated application designed to
+      carry out the job: the \emph{how} part.
+
+\item The \emph{who} part is generally the user or system assigned to carry
+      out the activity, through its application.
+\end{itemize}
+
+Figure~\ref{figure-SampleWorkflow} shows a sample workflow that illustrates
+this: The green nodes represent the activities that are to be completed
+throughout the workflow. The red edges between the nodes represent the control
+flow. Depending on the input that is provided by a user with the appropriate
+access rights (blue), the \emph{branch} nodes chooses one of two possible
+actions that are encapsulated by so-called \emph{service objects} (yellow).
+After one of those two possible actions has been performed, the \emph{merge}
+nodes merges the control flow again.
+
+The interaction with the user (to receive input, for instance) is performed
+through a so-called \emph{worklist} interface. The software system into
+which the workflow management system is integrated queries the workflow
+system whether a workflow instance is waiting for input that can be
+provided by the current user. The user can then provide the input through
+the worklist interface.
+
+\begin{figure}[hbtp]
+\begin{tikzpicture}
+  \node at ( 0, 6) [what] (Start) {Start};
+  \node at ( 0, 4) [what] (Input) {Input};
+  \node at ( 0, 2) [what] (Branch) {Branch};
+  \node at (-2, 0) [what] (ActionA) {Action};
+  \node at ( 2, 0) [what] (ActionB) {Action};
+  \node at ( 0,-2) [what] (Merge) {Merge};
+  \node at ( 0,-4) [what] (End) {End};
+  \node at ( 6, 4) [who] (Role) {Role};
+  \node at ( 6, 6) [who] (User) {User};
+  \node at (-6, 0) [how] (ServiceObjectA) {Service Object};
+  \node at ( 6, 0) [how] (ServiceObjectB) {Service Object};
+  \draw [red!50,->] (Start) to (Input);
+  \draw [red!50,->] (Input) to (Branch);
+  \draw [red!50,->,bend right=45] (Branch) to (ActionA);
+  \draw [red!50,->,bend left=45] (Branch) to (ActionB);
+  \draw [red!50,->,bend right=45] (ActionA) to (Merge);
+  \draw [red!50,->,bend left=45] (ActionB) to (Merge);
+  \draw [red!50,->] (Merge) to (End);
+  \draw[blue!50,dashed] [->] (Role) to (User);
+  \draw[blue!50,dashed] [->] (Role) to (Input);
+  \draw[yellow!50,dashed] [->] (ActionA) to (ServiceObjectA);
+  \draw[yellow!50,dashed] [->] (ActionB) to (ServiceObjectB);
+  \begin{pgfonlayer}{background}
+    \filldraw [line width=6mm,join=round,black!10]
+              (End.south   -| ActionA.west)
+    rectangle (Start.north -| ActionB.east);
+  \end{pgfonlayer}
+\end{tikzpicture}
+\caption[Who must do what when and how?]{\textcolor{blue}{Who} must do \textcolor{green}{what} \textcolor{red}{when} and \textcolor{yellow}{how}?}
+\label{figure-SampleWorkflow}
+\end{figure}
+
+\clearpage
+\section{Summary}
+
+Business enterprises need to reduce the cost of doing business and continually
+develop new services and products. Enterprise Content Management, as well as
+the related practices of Document Management and Knowlege Management, helps
+with storing business-critical content (customer data, documents, etc.) in a
+central repository and in a unified way. Business Process Management and
+Workflow Management provide the methodologies and software that help with
+organizing the processes that operate on this content inside an organization.

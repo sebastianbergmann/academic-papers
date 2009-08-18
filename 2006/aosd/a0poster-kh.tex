@@ -1,0 +1,148 @@
+
+%% Changes in a0poster.cls:
+
+\ifanullb
+   \setlength{\paperwidth}{119cm}
+   \setlength{\paperheight}{88cm}
+   \setlength{\textwidth}{116cm}
+   \setlength{\textheight}{88cm}
+\else\ifanull
+        \setlength{\paperwidth}{118.82cm}
+        \setlength{\paperheight}{83.96cm}
+        \setlength{\textwidth}{117.82cm}
+        \setlength{\textheight}{82.96cm}
+     \else\ifaeins
+             \setlength{\paperwidth}{83.96cm}
+             \setlength{\paperheight}{59.4cm}
+             \setlength{\textwidth}{83.96cm}
+             \setlength{\textheight}{58.4cm}
+          \else\ifazwei
+                  \setlength{\paperwidth}{59.4cm}
+                  \setlength{\paperheight}{41.98cm}
+                  \setlength{\textwidth}{58.4cm}
+                  \setlength{\textheight}{40.98cm}
+               \else\ifadrei
+                       \setlength{\paperwidth}{41.98cm}
+                       \setlength{\paperheight}{29.7cm}
+                       \setlength{\textwidth}{40.98cm}
+                       \setlength{\textheight}{28.7cm}
+                    \else\relax
+                    \fi
+               \fi
+          \fi
+     \fi
+\fi
+\setlength{\topmargin}{-10.7 mm}  % -1in +1.47cm
+\setlength{\oddsidemargin}{-21.4 mm} % -1in +0.4cm
+
+\ifportrait
+   \newdimen\tausch
+   \setlength{\tausch}{\paperwidth}
+   \setlength{\paperwidth}{\paperheight}
+   \setlength{\paperheight}{\tausch}
+   \setlength{\tausch}{\textwidth}
+   \setlength{\textwidth}{\textheight}
+   \setlength{\textheight}{\tausch}
+\else\relax
+\fi
+
+
+%% Additional commands:
+\makeatletter
+\renewcommand{\section}{\@startsection {section}{1}{\z@}%
+  {-3.5ex \@plus -1ex \@minus -.2ex}%
+  {2.3ex \@plus.2ex}%
+  {\reset@font\Large\bfseries\sffamily}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\reset@font\large\bfseries\sffamily}}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%               Hintergrund                    %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\background}[3]{\newrgbcolor{cgradbegin}{#1}
+  \newrgbcolor{cgradend}{#2} 
+  \psframe[fillstyle=gradient,gradend=cgradend,
+  gradbegin=cgradbegin,gradmidpoint=#3](0.,0.)(1.\textwidth,-1.\textheight)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                Header                        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{header}[1][1. 1. 1.] {
+    \vspace{2em}
+
+    \begin{center}
+    \newrgbcolor{hcolor}{#1}
+    \begin{lrbox}{\dummybox} 
+    \begin{minipage}[t]{.9\textwidth}
+ }
+ {  \end{minipage} \end{lrbox}
+      \raisebox{-\depth}{\hspace{.5in}\hspace{-4mm}
+       \psshadowbox[fillstyle=solid,fillcolor=hcolor,framesep=8mm]
+    {\usebox{\dummybox}}} \end{center}
+     \vspace{2em}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                Header no shadow              %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{headerns}[1][1. 1. 1.] {
+    \vspace{2em}
+
+    \begin{center}
+    \newrgbcolor{hcolor}{#1}
+    \begin{lrbox}{\dummybox} 
+    \begin{minipage}[t]{.9\textwidth}
+ }
+ {  \end{minipage} \end{lrbox}
+      \raisebox{-\depth}{\hspace{.5in}\hspace{-4mm}
+       \psshadowbox[fillstyle=solid,fillcolor=hcolor,framesep=8mm,shadowsize=0pt]
+    {\usebox{\dummybox}}} \end{center}
+     \vspace{2em}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                Poster                        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newsavebox{\dummybox}
+\newsavebox{\spalten}
+
+\newenvironment{poster} {
+   \vfill \begin{minipage}{\textwidth}  }
+  {\end{minipage} \vfill}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                pcolumn                       %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\columnfrac}{.3}
+\newenvironment{pcolumn}{%
+  \hfill\begin{minipage}[t]{\columnfrac\textwidth}}{\end{minipage}\hfill%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                pbox                          %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{pbox}[1][1. 1. 1.] {
+   \newrgbcolor{bcolor}{#1}
+  \begin{lrbox}{\dummybox}%
+    \begin{minipage}{0.96\linewidth}}%
+    {\end{minipage}
+  \end{lrbox}
+  \raisebox{-\depth}{\hspace{-.5em} 
+   \psshadowbox[fillstyle=solid,fillcolor=bcolor,framesep=1em]{\usebox{\dummybox}}} \vspace{2em} \vfill}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                pbox   no shadow              %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{pboxns}[1][1. 1. 1.] {
+   \newrgbcolor{bcolor}{#1}
+  \begin{lrbox}{\dummybox}%
+    \begin{minipage}{0.96\linewidth}}%
+    {\end{minipage}
+  \end{lrbox}
+  \raisebox{-\depth}{\hspace{-.5em} 
+   \psshadowbox[fillstyle=solid,fillcolor=bcolor,framesep=1em,shadowsize=0pt]{\usebox{\dummybox}}} \vspace{2em} \vfill}
+
+

@@ -1,0 +1,80 @@
+\chapter{Conclusion and Future Work}
+\label{chapter-Conclusion}
+
+\section{Conclusion}
+
+This thesis reviewed previous research such as \cite{BK03,DAM01,PM99,SF04}
+and combined it for the first time in an effort to design and implement a
+workflow system that meets industry requirements.
+
+The pragmatic approach to describe the semantics of workflow routing constructs
+through \emph{Workflow Patterns} \cite{BK03} provides a good foundation for the
+\emph{Backend Language} of a \emph{Workflow Virtual Machine} \cite{SF04} that
+executes workflow definitions represented through object graphs in a
+component-based workflow architecture \cite{DAM01}.
+
+The software that has been developed as part of this thesis is a contribution
+to the PHP community. It provides an extendable framework to define workflows
+and a virtual machine for the execution of these definitions that can be
+embedded into a PHP application, thus extending it with workflow capabilities.
+This workflow system can be customized and extended through the composition of
+components, its workflow model can be customized and extended through the
+classes that define the control flow constructs. It is neither bound to a
+specific application into which it is embedded nor to a specific workflow
+description language, thus providing more degrees of freedom with regard to
+use -- and re-use -- of the workflow engine.
+
+\section{Future Work}
+
+\subsection{Analysis and Verification of Workflows}
+
+The current implementation of the software that has been developed as part of
+this thesis has basic support for the analysis and verification of workflow
+specifications. Future versions of the software can implement more advanced
+verification tools based upon the \emph{abundance of analysis techniques} that
+exists for Petri nets \cite{WA96}.
+
+\subsection{Workflow Model}
+
+The workflow model can be extended, for instance, with support for more
+workflow patterns, by adding the respective node types.
+
+\subsection{Aspect-Oriented Programming}
+
+Aspect-Oriented Programming \emph{allow[s] programming by making quantified
+programmatic assertions over programs written by programmers oblivious to
+such assertions} \cite{RF00}. These assertions make \emph{quantified
+statements about which code is to execute in which circumstances}.
+
+Section 2 of \cite{SB06} presents an overview of the various implementations
+of AOP for PHP that support AOP by extending the base programming language.
+The combination of Graph-Oriented Programming with Aspect-Oriented Programming
+would add yet another possibility to faciliate AOP with the PHP platform, but
+without the need to change or extend the base programming language. The
+workflow model discussed in Chapter~\ref{chapter-WorkflowModel} would serve as
+the Joinpoint Model of an AOP system that can be implemented as an additional
+component for the software that was presented in
+Chapter~\ref{chapter-DesignAndImplementation}. Pointcuts such as \emph{node of
+type X is executed} could then be used to express when additional code is to
+be run during workflow execution. Compared to the implicit callgraph structure
+on which language-level AOP systems operate, the explicit graph structure of
+workflows makes the idea of AOP intuitively clear.
+
+This combination of Aspect-Oriented Programming with Graph-Oriented Programming
+could then be compared to Aspect-Oriented Programming in general as well as
+to Adaptive Programming which Lieberherr describes as \emph{thespecial case of
+Aspect-Oriented Programming (AOP) where some of the building blocks are
+expressible in terms of graphs} \cite{KL97}.
+
+\subsection{Compilation of Workflows}
+
+Model-Driven Architecture (MDA) \emph{separates business and application logic
+from underlying platform technology} \cite{JM01} and supports the Model-Driven
+Engineering (MDE) of software systems. It offers a \emph{promising approach to
+address the inability of third-generation languages to alleviate the complexity
+of platforms and express domain concepts effectively} \cite{DS06}.
+
+In this context the possibility could be evaluated whether the software that
+has been developed as part of this thesis can be extended with a code
+generator component that can compile a workflow specification into a
+ready-to-use application.

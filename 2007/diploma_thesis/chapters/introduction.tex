@@ -1,0 +1,61 @@
+\addcontentsline{toc}{chapter}{Introduction}
+\chapter*{Introduction}
+
+\section*{Problem Statement and Goal}
+
+This thesis has the design and implementation of a workflow engine as its goal.
+This goal has motivations from both academia and industry that were represented
+by the two supervising institutions, the Institute of Computer Science of the
+University of Bonn, Germany and eZ~Systems~AS, respectively.
+
+The topic of this diploma thesis was set up by eZ~Systems~AS in Skien,
+Norway. The company is the creator of eZ~Publish, an Open Source Enterprise
+Content Management System, and eZ~Components, a components library for PHP~5.
+As we will see in Chapter~\ref{chapter-Requirements}, eZ~Systems~AS is in need
+of a flexible and reusable workflow engine component, written in the PHP
+programming language, that can be used in the development of the next version
+of their eZ~Publish~ECMS. Of academic interest is how research such as
+\cite{BK03,DAM01,PM99,SF04} can be put to use for the design and
+implementation of such a software component.
+
+The goal of this thesis is therefore to \emph{review the relevant literature},
+to \emph{find a suitable workflow model} as the foundation for the
+\emph{design and implementation of a workflow engine}, and to \emph{evaluate
+the resulting software component} with regard to the industry requirements
+set up by eZ~Systems~AS.
+
+\section*{Structure}
+
+Chapter~\ref{chapter-ProblemDomain} gives an introduction to the problem domain
+of Enterprise Content Management and Workflow Management.
+Chapter~\ref{chapter-WorkflowSemantics} presents Petri nets as a formal way and
+workflow patterns as a more pragmatic way to define the semantics of a workflow
+model.
+
+Chapter~\ref{chapter-Technology} gives an introduction to the technology stack
+(PHP, eZ~Publish, eZ~Components) that is relevant to and used by the software
+that has been implemented as part of this thesis.
+Chapter~\ref{chapter-Requirements} discusses the requirements that lead to the
+development of this software.
+
+Chapter~\ref{chapter-WorkflowModel} presents the semantics and syntax of the
+workflow model that is the foundation for the software.
+Chapter~\ref{chapter-DesignAndImplementation} discusses the design and
+implementation of the software.
+
+This paper concludes with an evaluation of the software
+(Chapter~\ref{chapter-Evaluation}), a comparison to related work, and an
+outlook on future work (Chapter~\ref{chapter-Conclusion}).
+
+\section*{Acknowledgements}
+\thispagestyle{empty}
+
+I would like to thank Prof. Dr. Armin B. Cremers for making it possible that
+I could do my thesis in cooperation with eZ~Systems~AS and Dr. Stefan
+Lüttringhaus-Kappel for being my thesis advisor. I would like to thank
+everyone at eZ~Systems~AS for the great time I had in Norway.
+
+Finally, I would like to express my appreciation for the people involved in
+the development of the free software that is discussed in this paper (PHP,
+eZ~Publish, eZ~Components) and was used to typeset (\LaTeX, Dia, Doxygen,
+GraphViz, KOMA-Script, PGF, Ti\emph{k}Z) this paper.

@@ -1,0 +1,201 @@
+\documentclass[pdftex,a4paper,12pt,DIV12,oneside,bibtotocnumbered,idxtotoc,halfparskip,chapterprefix]{scrbook}
+
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{flafter}
+\usepackage{float}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=.90]{helvet}
+\usepackage[pdftex]{hyperref}
+\usepackage[latin1]{inputenc}
+\usepackage{mathptmx}
+\usepackage{rotating}
+\usepackage{setspace}
+\usepackage{url}
+\usepackage{xcolor}
+
+% Page Layout
+\headheight = 0.05\textheight
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0.4 pt}
+\renewcommand{\footrulewidth}{0.4 pt}
+\fancyhead[L]{\small Sebastian Bergmann}
+\fancyhead[R]{\small Design and Implementation of a Workflow Engine}
+\fancyfoot[L]{\small \nouppercase{\footnotesize{\leftmark}}}
+\fancyfoot[R]{\small \thepage}
+\parindent0em
+
+% Font
+\setkomafont{sectioning}{\normalfont\bfseries}
+\setkomafont{captionlabel}{\normalfont\bfseries}
+\setkomafont{pagehead}{\normalfont\itshape}
+\setkomafont{descriptionlabel}{\normalfont\bfseries}
+
+% Listings
+\usepackage[savemem]{listings}
+\definecolor{lbcolor}{rgb}{0.85,0.85,0.85}
+\lstset{numbers=left,
+        stepnumber=1,
+        numbersep=5pt,
+        numberstyle=\tiny,
+        breaklines=true,
+        breakautoindent=true,
+        postbreak=\space,
+        tabsize=2,
+        basicstyle=\ttfamily\footnotesize,
+        showspaces=false,
+        showstringspaces=false,
+        extendedchars=true,
+        backgroundcolor=\color{lbcolor}}
+
+% PGF / TikZ
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,backgrounds,petri,shapes}
+\tikzstyle{node}=[circle,draw=gray!50,fill=gray!20,thick]
+\tikzstyle{activity}=[rectangle,draw=gray!50,fill=gray!20,thick]
+\tikzstyle{who}=[rectangle,draw=blue!50,fill=blue!20,thick]
+\tikzstyle{what}=[circle,draw=green!50,fill=green!20,thick]
+\tikzstyle{how}=[rectangle,draw=yellow!50,fill=yellow!20,thick]
+\tikzstyle{place}=[circle,thick,draw=gray!75,fill=gray!20,minimum size=6mm]
+\tikzstyle{transition}=[rectangle,thick,draw=black!75,fill=black!20,minimum size=4mm]
+
+% Metadata
+\author{Sebastian Bergmann}
+\title{Design and Implementation of a Workflow Engine}
+\hypersetup{pdfauthor={Sebastian Bergmann},
+            pdftitle={Design and Implementation of a Workflow Engine},
+            pdfkeywords={PHP, Graph-Oriented Programming, Workflow Management},
+            pdfsubject={PHP, Graph-Oriented Programming, Workflow Management},
+            pdfcreator={LaTeX, Doxygen, KOMA-Script, PGF, TikZ},
+            pdfproducer={LaTeX, Doxygen, KOMA-Script, PGF, TikZ},
+            bookmarks,
+            pdfstartview=FitH,
+            pdfpagelayout=OneColumn}
+
+\begin{document}
+
+\frontmatter
+\begin{titlepage}
+\begin{center}
+
+\includegraphics[width=6cm]{figures/unibonn-logo}\\[5mm]
+
+{\bf Rheinische Friedrich-Wilhelms-Universität}\\[5mm]
+{Institut für Informatik III \\ Prof.~Dr.~Armin~B.~Cremers}\\[3cm]
+
+{\LARGE\bf Design and Implementation of a Workflow Engine}\\[3cm]
+
+{\bf Diplomarbeit von}\\[5mm]
+{Sebastian Bergmann \\
+Aulgasse 14 \\
+53721 Siegburg \\[5mm]
+E-Mail: sb@sebastian-bergmann.de\\[5mm]
+Matrikelnummer: 1247261}\\[2cm]
+
+\begin{tabular}[h]{rl}
+1. Gutachter: & Prof.~Dr.~Armin~B.~Cremers\\
+2. Gutachter: & Prof.~Dr.~Rainer~Manthey\\
+\end{tabular}\\[2cm]
+
+\begin{tabular}[h]{rl}
+Tag der Abgabe:        & 13. Februar 2007\\
+Letzte Aktualisierung: & 23. Januar 2008\\
+\end{tabular}
+\end{center}
+
+\end{titlepage}
+
+\pagenumbering{roman}
+\thispagestyle{empty}
+
+\addcontentsline{toc}{section}{Manifesto}
+\addcontentsline{toc}{section}{License}
+\noindent
+Manifesto\\
+\\
+Except where indicated otherwise, this thesis is my own original work.\\
+\\[1cm]
+Sebastian Bergmann\\
+\\[9cm]
+This thesis is published under the Creative Commons Attribution 2.0 Germany license.\\
+\\
+You are free:
+
+\begin{itemize}
+\item to copy, distribute, display, and perform the work
+\item to make derivative works
+\item to make commercial use of the work
+\end{itemize}
+
+Under the following conditions:
+
+\begin{itemize}
+\item {\bf Attribution}. You must attribute the work in the manner specified by the author or licensor.
+\item For any reuse or distribution, you must make clear to others the license terms of this work.
+\item Any of these conditions can be waived if you get permission from the copyright holder.
+\end{itemize}
+
+Your fair use and other rights are in no way affected by the above.
+
+\cleardoublepage
+\thispagestyle{empty}
+\onehalfspacing
+\addcontentsline{toc}{section}{Abstract}
+\noindent
+{{\LARGE\bf Abstract}\\
+\\
+\\
+This thesis discusses the design and implementation of a software component
+that faciliates the specification, management, and execution of so-called
+workflows.\\
+The discussion of this component's design includes the semantics and syntax of
+the underlying workflow model as well as the actual software design. The
+former builds upon the \emph{Workflow Patterns} \cite{BK03} terminology, the
+latter on the concepts of a \emph{Workflow Virtual Machine} \cite{SF04} and
+the idea that a workflow system should be comprised of loosely coupled
+components \cite{DAM01,DG95,PM99}.\\
+\\
+\\
+Diese Diplomarbeit behandelt den Entwurf und die Implementierung einer
+Softwarekomponente für die Definition, Verwaltung und Ausführung von 
+Spezifikationen so genannter Workflows.\\
+Die Diskussion des Entwurfs dieser Komponente behandelt Semantik und Syntax
+des zugrunde liegenden Workflow-Modells ebenso wie das eigentliche
+Software-Design. Ersteres baut auf der Terminologie der \emph{Workflow Patterns}
+\cite{BK03} auf, letzteres auf dem Konzept einer \emph{Workflow Virtual Machine}
+\cite{SF04} und der Idee, dass ein Workflow-System aus lose gekoppelten
+Komponenten aufgebaut sein sollte \cite{DAM01,DG95,PM99}.\\
+\\
+Diese Diplomarbeit wurde in englischer Sprache verfasst.
+
+\cleardoublepage
+\tableofcontents
+\addcontentsline{toc}{section}{List of Figures}
+\listoffigures
+\cleardoublepage
+\pagestyle{fancy}
+\pagenumbering{arabic}
+\mainmatter
+
+\input{chapters/introduction}
+\input{chapters/problem_domain}
+\input{chapters/workflow_semantics}
+\input{chapters/technology}
+\input{chapters/requirements}
+\input{chapters/workflow_model}
+\input{chapters/design_and_implementation}
+\input{chapters/evaluation}
+\input{chapters/conclusion}
+
+\begin{appendix}
+
+\input{chapters/tutorial}
+\input{chapters/api}
+\input{chapters/bibliography}
+
+\end{appendix}
+
+\end{document}
+
