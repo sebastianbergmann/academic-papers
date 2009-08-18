@@ -77,6 +77,24 @@ complete workflow instance is removed. This includes currently executing nodes,
 those which may execute at some future time and all parent and sub-workflows.
 The workflow instance is recorded as having completed unsuccessfully.
 
+\subsubsection{ezcWorkflowNodeFinally}
+
+\emph{Incoming Nodes: 0}\\
+\emph{Outgoing Nodes: 1}\\
+
+An object of the \texttt{ezcWorkflowNodeFinally} class (see
+Figure~\ref{classezcWorkflowNode}) represents the start node of a sequence of
+final activities that is executed when a workflow execution is cancelled.
+
+Creating an object of the \texttt{ezcWorkflow} class automatically creates the
+finally node for this new workflow.
+
+\begin{lstlisting}[language=PHP]
+$workflow = new ezcWorkflow( 'Name' );
+$workflow->endNode = new ezcWorkflowNodeCancel;
+$workflow->finallyNode->addOutNode( /* ... */ );
+\end{lstlisting}
+
 \subsection{ezcWorkflowNodeAction}
 
 \emph{Incoming Nodes: 1}\\
