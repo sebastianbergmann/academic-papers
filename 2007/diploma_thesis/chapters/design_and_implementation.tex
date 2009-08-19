@@ -177,7 +177,6 @@ waiting for user input, for instance), the workflow execution is suspended.
 When the set of activated nodes is empty, the execution of the workflow ends.
 
 \begin{lstlisting}[language=PHP,float,caption={The workflow engine's main execution loop},label=listing-ezcWorkflowExecution]
-<?php
 abstract class ezcWorkflowExecution
 {
     // ...
@@ -190,19 +189,38 @@ abstract class ezcWorkflowExecution
 
             foreach ( $this->activatedNodes as $key => $node )
             {
-                if ( !$this->hasEnded() )
+                if ( $this->cancelled && $this->ended )
                 {
-                    if ( $node->execute( $this ) )
+                    break;
+                }
+
+                if ( $node  instanceof ezcWorkflowNodeEnd &&
+                     !$node instanceof ezcWorkflowNodeCancel &&
+                     $this->numActivatedNodes != $this->numActivatedEndNodes )
+                {
+                    continue;
+                }
+
+                if ( $node->execute( $this ) )
+                {
+                    unset( $this->activatedNodes[$key] );
+                    $this->numActivatedNodes--;
+
+                    if ( !$this->cancelled && !$this->ended )
                     {
-                        unset( $this->activatedNodes[$key] );
-                        $executed = true;
+                        foreach ( $this->plugins as $plugin )
+                        {
+                            $plugin->afterNodeExecuted( $this, $node );
+                        }
                     }
+
+                    $executed = true;
                 }
             }
         }
         while ( !empty( $this->activatedNodes ) && $executed );
 
-        if ( !$this->hasEnded() )
+        if ( !$this->cancelled && !$this->ended )
         {
             $this->suspend();
         }
@@ -210,7 +228,6 @@ abstract class ezcWorkflowExecution
 
     // ...
 }
-?>
 \end{lstlisting}
 
 During its execution, a node can activate an arbitrary amount of its outgoing
